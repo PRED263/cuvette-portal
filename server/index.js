@@ -5,6 +5,7 @@ const authRoutes = require('./routes/authRoutes');
 const jobRoutes = require('./routes/JobRoutes');
 const cors = require('cors');
 const { sequelize } = require('./db/connection');
+const seedDatabase = require('./seed');
 
 // Import models to ensure they're registered
 require('./model/relationships');
@@ -24,12 +25,13 @@ const initializeDatabase = async () => {
         await sequelize.sync({ force: true });
         console.log('Database synchronized!');
         
-        // Import and run seed script
-        const seedDatabase = require('./seed');
+        // Run seed script
         await seedDatabase();
         console.log('Database seeded successfully!');
     } catch (error) {
         console.error('Database initialization error:', error);
+        // Don't throw the error, just log it
+        // This allows the server to start even if seeding fails
     }
 };
 
