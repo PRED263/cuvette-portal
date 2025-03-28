@@ -3,84 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Account</title>
+    <title>Sign Up</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body class="bg-gray-50">
+<body>
     <header class="bg-white shadow-sm p-4 flex justify-between items-center">
         <div class="flex items-center">
             <a href="./index.html">
                 <img src="../public/img/cuvette.svg" alt="Cuvette Logo" >
-            <!-- <a href="./index.html" class="ml-4 text-blue-600 hover:underline text-sm">Contact</a> -->
             </a>
         </div>
     </header>
 
-    <div class="flex items-center justify-center min-h-screen">
+    <div class="bg-gray-50 flex items-center justify-center min-h-screen">
         <div class="bg-white p-8 rounded-xl shadow-sm w-full max-w-sm">
-            <h2 class="text-xl font-semibold text-gray-800 mb-6 text-center">Create Account</h2>
-
+            <h2 class="text-xl font-semibold text-gray-800 mb-6 text-center">Create an Account</h2>
+            
             <form id="signupForm">
                 <div class="mb-4">
-                    <label class="block text-gray-600 text-sm mb-1" for="name">Name</label>
-                    <input class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" id="name" name="name" type="text" placeholder="Your name" required>
+                    <label class="block text-gray-600 text-sm mb-1" for="name">Full Name</label>
+                    <input class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" id="name" name="name" type="text" placeholder="Enter your full name" required>
                 </div>
                 <div class="mb-4">
                     <label class="block text-gray-600 text-sm mb-1" for="email">Email</label>
-                    <input class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" id="email" name="email" type="email" placeholder="Your email" required>
-                </div>
-                <div class="mb-4 flex space-x-4">
-                    <div class="w-1/2">
-                        <label class="block text-gray-600 text-sm mb-1" for="password">Password</label>
-                        <input class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" id="password" name="password" type="password" placeholder="Password" required>
-                    </div>
-                    <div class="w-1/2">
-                        <label class="block text-gray-600 text-sm mb-1" for="confirm-password">Confirm</label>
-                        <input class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" id="confirm-password" type="password" placeholder="Confirm" required>
-                    </div>
+                    <input class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" id="email" name="email" type="email" placeholder="Enter your email" required>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-gray-600 text-sm mb-1" for="mobile">Mobile Number</label>
-                    <input class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" id="mobile" name="mobile" type="text" placeholder="Your mobile number" required>
+                    <label class="block text-gray-600 text-sm mb-1" for="phone">Phone Number</label>
+                    <input class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" id="phone" name="phone" type="tel" placeholder="Enter your phone number" required>
                 </div>
-                <div class="mb-6 flex items-center">
-                    <input class="mr-2 h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" type="checkbox" id="terms" required>
-                    <label class="text-sm text-gray-600" for="terms">I agree to <a href="#" class="text-blue-600 hover:underline">Terms & Conditions</a></label>
+                <div class="mb-6">
+                    <label class="block text-gray-600 text-sm mb-1" for="password">Password</label>
+                    <input class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" id="password" name="password" type="password" placeholder="Create a password" required>
                 </div>
                 <div class="mb-6">
                     <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-md transition duration-200" type="submit">
-                        Create Account
+                        Sign Up
                     </button>
                 </div>
                 <div class="text-center text-sm">
-                    <p>Already have an account? <a href="./login.html" class="text-blue-600 hover:underline">Sign In</a></p>
+                    <p>Already have an account? <a href="./login.html" class="text-blue-600 hover:underline">Sign in</a></p>
                 </div>
-                <p id="message" class="text-center text-red-500 text-sm mt-4"></p>
             </form>
+            <p id="message" class="text-center text-red-500 mt-4"></p>
         </div>
     </div>
 
-    <script>
+    <script type="module">
+        import { apiUrl } from './config.js';
+        
         document.getElementById('signupForm').addEventListener('submit', async (event) => {
             event.preventDefault();
             const name = document.getElementById('name').value;
             const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
             const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirm-password').value;
-            const mobile = document.getElementById('mobile').value;
-
-            if (password !== confirmPassword) {
-                document.getElementById('message').textContent = 'Passwords do not match';
-                return;
-            }
-
-            const userData = { name, email, password, phone: mobile };
+            const signupData = { name, email, phone, password };
 
             try {
-                const response = await fetch('http://localhost:8000/api/signup', {
+                const response = await fetch(`${apiUrl}/api/signup`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(userData)
+                    body: JSON.stringify(signupData)
                 });
                 const result = await response.json();
                 const message = document.getElementById('message');
@@ -88,15 +72,14 @@
                 if (response.ok) {
                     message.classList.remove('text-red-500');
                     message.classList.add('text-green-500');
-                    message.textContent = 'Account created successfully! Redirecting...';
-                    localStorage.setItem('token', result.token);
-                    setTimeout(() => window.location.href = './dashboard.html', 2000);
+                    message.textContent = 'Account created successfully! Redirecting to login...';
+                    setTimeout(() => window.location.href = './login.html', 2000);
                 } else {
-                    message.textContent = result.message || 'Something went wrong';
+                    message.textContent = result.message || 'Failed to create account';
                 }
             } catch (error) {
                 console.error('Error:', error);
-                message.textContent = 'Failed to connect to the server';
+                document.getElementById('message').textContent = 'Failed to connect to the server';
             }
         });
     </script>

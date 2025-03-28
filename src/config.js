@@ -1,5 +1,5 @@
-const apiUrl = process.env.NODE_ENV === 'production' 
-  ? 'https://cuvette-portal.onrender.com'  // Production URL
-  : 'http://localhost:8000';  // Development URL
+const apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+  ? 'http://localhost:8000'  // Development URL
+  : 'https://cuvette-portal.onrender.com';  // Production URL
 
 export { apiUrl }; 
