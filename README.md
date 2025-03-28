@@ -1,94 +1,123 @@
-# Job Search Website (Inspired by Cuvette)
+# Cuvette Job Portal
 
-## 📌 Project Overview
+A full-stack job portal application built with Node.js, Express, SQLite, and vanilla JavaScript.
 
-This is a job-searching platform similar to **Cuvette**, designed as part of the **Liftoff Club** project. The platform connects job seekers with employers, offering a seamless experience to apply for jobs and internships. It features advanced job filtering and sorting mechanisms to help users find the best opportunities.
+## Features
 
-## 🌟 Features
+- User Authentication (Sign up/Login)
+- Employer Authentication (Sign up/Login)
+- Job Posting
+- Job Search and Filtering
+- Job Applications
+- Responsive UI with Tailwind CSS
 
-### For Job Seekers
+## Prerequisites
 
-- **User Authentication**: Secure sign-up and login system (Email/Password & OAuth).
-- **Profile Management**: Create and manage professional profiles with skills, experience, and resume upload.
-- **Job Search & Filters**:
-  - Search by title, company, or keywords
-  - Filter by location (remote/on-site/hybrid)
-  - Sort by salary range, job type (internship/full-time), and application deadline
-  - Skill-based job recommendations
-- **Application Tracking**: View applied jobs, track status (applied, shortlisted, rejected).
-- **Notifications**: Real-time job alerts and application status updates.
+- Node.js (v14 or higher)
+- npm (v6 or higher)
 
-### For Employers
+## Project Structure
 
-- **Company Dashboard**: Manage job postings and view candidate applications.
-- **Job Posting**: Create job listings with custom requirements.
-- **Candidate Management**: Filter, shortlist, and contact applicants.
+```
+cuvette-v2/
+├── src/                    # Frontend files
+│   ├── index.html         # Landing page
+│   ├── login.html         # User login
+│   ├── signup.html        # User signup
+│   ├── dashboard.html     # User dashboard
+│   ├── job.html          # Job posting page
+│   ├── post-job.html     # Job creation page
+│   └── config.js         # API configuration
+├── public/                # Static assets
+│   └── img/              # Images
+├── server/               # Backend files
+│   ├── controller/       # Route controllers
+│   ├── model/           # Database models
+│   ├── routes/          # API routes
+│   ├── db/              # Database configuration
+│   ├── index.js         # Server entry point
+│   └── package.json     # Backend dependencies
+└── README.md            # This file
+```
 
-### Admin Panel
-
-- Manage users, job listings, and site analytics.
-
-## 📊 Sorting & Filtering System
-
-1. **Sort By:**
-   - Relevance (Based on skills and job description match)
-   - Date (Newest listings first)
-   - Salary (Highest to lowest)
-   - Application Deadline (Closest first)
-2. **Filters:**
-   - Job Type (Full-time, Internship, Contract)
-   - Location (Remote, On-site, Hybrid)
-   - Experience Level (Fresher, Mid-level, Senior)
-   - Salary Range
-
-## 🛠️ Tech Stack
-
-- **Frontend:** React.js (with Tailwind CSS for styling)
-- **Backend:** Node.js (Express.js)
-- **Database:** MongoDB (or PostgreSQL)
-- **Authentication:** JWT (JSON Web Tokens) & OAuth (Google Sign-In)
-- **Deployment:** Vercel (Frontend) & Render (Backend)
-
-## 🚀 Installation & Setup
+## Setup Instructions
 
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-username/job-search-platform.git
-   cd job-search-platform
+   git clone https://github.com/PRED263/cuvette-portal.git
+   cd cuvette-portal
    ```
 
-2. Install dependencies:
+2. Install backend dependencies:
 
    ```bash
+   cd server
    npm install
    ```
 
-3. Set up environment variables (e.g., `.env` file):
-
-   ```env
-   MONGO_URI=your_mongo_connection_string
-   JWT_SECRET=your_jwt_secret
-   GOOGLE_CLIENT_ID=your_google_client_id
-   GOOGLE_CLIENT_SECRET=your_google_client_secret
-   ```
-
-4. Run the development server:
+3. Start the server:
 
    ```bash
-   npm run dev
+   npm start
    ```
 
-## 📄 Future Enhancements
+4. Open your browser and navigate to:
+   ```
+   http://localhost:8000
+   ```
 
-- Resume Parsing for automated job recommendations
-- AI-based candidate-job matching
-- Employer analytics dashboard
+## Test Accounts
 
-## 📬 Contributing
+### User Account
 
-Contributions are welcome! Fork the repository and submit a pull request to propose changes.
+- Email: rahul.sharma@gmail.com
+- Password: password123
 
-## 📜 License
+### Employer Account
 
-This project is licensed under the MIT License.
+- Email: careers@infosys.com
+- Password: password123
+
+## API Endpoints
+
+### Authentication
+
+- POST `/api/signup` - User registration
+- POST `/api/login` - User login
+- POST `/api/employer/signup` - Employer registration
+- POST `/api/employer/login` - Employer login
+
+### Jobs
+
+- GET `/jobs` - Get all jobs
+- POST `/jobs/createjob` - Create a new job
+- POST `/jobs/apply` - Apply for a job
+- GET `/jobs/applied` - Get applied jobs
+- GET `/jobs/employer/jobs` - Get employer's posted jobs
+
+## Technologies Used
+
+- Frontend:
+
+  - HTML5
+  - CSS3 (Tailwind CSS)
+  - Vanilla JavaScript (ES6+)
+
+- Backend:
+  - Node.js
+  - Express.js
+  - SQLite (with Sequelize ORM)
+  - JWT for authentication
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
