@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Employer Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="font-sans">
+  <!-- Navbar -->
+  <nav class="bg-white shadow-md border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-16">
+        <div class="flex items-center">
+          <a href="./index.html" class="flex-shrink-0">
+            <img src="../public/img/cuvette.svg" alt="Cuvette">
+          </a>
+        </div>
+        <div class="flex items-center">
+          <div class="ml-4 flex items-center">
+            <!-- Profile Dropdown -->
+            <div class="relative">
+              <button id="profileDropdown" class="flex items-center border border-gray-300 rounded-lg py-1 px-3">
+                <!-- <img class="h-8 w-8 rounded-full" src="../public/user.png" alt="Profile"> -->
+                <span id="employerName" class="ml-2 text-sm font-medium text-gray-700"></span>
+                <svg class="ml-2 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                </svg>
+              </button>
+              <div id="dropdownMenu" class="hidden absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg">
+                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
+                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
+                <button id="logoutButton" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="flex">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white border-r border-gray-200 h-screen">
+      <nav class="mt-5 px-2">
+        <a href="#" id="postedJobsLink" class="group flex items-center px-2 py-2 text-base leading-6 font-medium rounded-md text-blue-600 bg-gray-100">
+          <svg class="mr-4 h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+          </svg>
+          Posted Jobs
+        </a>
+        <a href="#" id="postJobLink" class="mt-1 group flex items-center px-2 py-2 text-base leading-6 font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+          <svg class="mr-4 h-6 w-6 text-gray-400 group-hover:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+          </svg>
+          Post a Job
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Main content area -->
+    <main class="flex-1 p-10">
+      <h1 id="pageTitle" class="text-2xl font-semibold">Posted Jobs</h1>
+      <div id="jobListings" class="mt-6 space-y-4">
+        <!-- Job cards will be dynamically inserted here -->
+      </div>
+    </main>
+  </div>
+
+  <!-- JavaScript for Interactivity -->
+  <script>
+    const token = localStorage.getItem('token');
+    if (!token) {
+      window.location.href = './employer-login.html';
+    }
+
+    // Fetch and display employer details
+    async function fetchEmployerDetails() {
+      try {
+        const response = await fetch('http://localhost:8000/api/employer', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await response.json();
+        if (response.ok) {
+          document.getElementById('employerName').textContent = data.result.name || 'Employer';
+        } else {
+          console.error('Failed to fetch employer details:', data.message);
+        }
+      } catch (error) {
+        console.error('Error fetching employer details:', error);
+      }
+    }
+
+    // Fetch and display jobs posted by the employer
+    async function fetchEmployerJobs() {
+      try {
+        const response = await fetch('http://localhost:8000/jobs/employer/jobs', {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+        const result = await response.json();
+
+        if (response.ok) {
+          displayJobs(result.jobs);
+        } else {
+          console.error('Failed to fetch jobs:', result.message);
+        }
+      } catch (error) {
+        console.error('Error fetching jobs:', error);
+      }
+    }
+
+    // Display jobs in the dashboard
+    function displayJobs(jobs) {
+      const jobListings = document.getElementById('jobListings');
+      jobListings.innerHTML = '';
+
+      if (!jobs || jobs.length === 0) {
+        jobListings.innerHTML = '<p class="text-gray-600">No jobs posted yet.</p>';
+      } else {
+        jobs.forEach(job => {
+          const applicationsHtml = job.applications && job.applications.length > 0 
+            ? `
+                <div class="mt-4 border-t pt-4">
+                    <h3 class="font-semibold text-gray-700 mb-2">Applications (${job.applications.length})</h3>
+                    <div class="space-y-2">
+                        ${job.applications.map(app => `
+                            <div class="bg-gray-50 p-3 rounded-md">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <p class="font-medium text-gray-900">${app.applicantName}</p>
+                                        <p class="text-sm text-gray-600">${app.applicantEmail}</p>
+                                    </div>
+                                    <span class="text-xs text-gray-500">Applied on: ${new Date(app.appliedAt).toLocaleDateString()}</span>
+                                </div>
+                                <div class="mt-2 flex space-x-2">
+                                    <button class="text-sm text-blue-600 hover:text-blue-800">View Profile</button>
+                                    <button class="text-sm text-green-600 hover:text-green-800">Accept</button>
+                                    <button class="text-sm text-red-600 hover:text-red-800">Reject</button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `
+            : '<p class="mt-4 text-gray-500">No applications yet</p>';
+
+          const jobCard = `
+            <div class="bg-white p-6 rounded-lg shadow-md">
+              <h2 class="text-xl font-semibold">${job.title}</h2>
+              <p class="text-gray-600"><strong>Company:</strong> ${job.Employer?.company || 'Unknown Company'}</p>
+              <p class="text-gray-600"><strong>Location:</strong> ${job.location}</p>
+              <p class="text-gray-600"><strong>Tech Stack:</strong> ${Array.isArray(job.tech) ? job.tech.join(', ') : job.tech}</p>
+              <p class="text-gray-600"><strong>Package:</strong> ${job.package}</p>
+              <p class="text-gray-600"><strong>Start Date:</strong> ${new Date(job.startdate).toLocaleDateString()}</p>
+              <p class="text-gray-600"><strong>Openings:</strong> ${job.openings}</p>
+              <p class="text-gray-600"><strong>Experience:</strong> ${job.experience}</p>
+              <p class="text-gray-600"><strong>Job Type:</strong> ${job.type}</p>
+              <p class="text-gray-600"><strong>Office Type:</strong> ${job.officeType}</p>
+              ${applicationsHtml}
+            </div>
+          `;
+          jobListings.innerHTML += jobCard;
+        });
+      }
+    }
+
+    // Event listeners for sidebar links
+    document.getElementById('postedJobsLink').addEventListener('click', (e) => {
+      e.preventDefault();
+      setActiveLink('postedJobsLink');
+      fetchEmployerJobs();
+      document.getElementById('pageTitle').textContent = 'Posted Jobs';
+    });
+
+    document.getElementById('postJobLink').addEventListener('click', (e) => {
+      e.preventDefault();
+      setActiveLink('postJobLink');
+      window.location.href = './post-job.html'; // Redirect to post job page
+    });
+
+    // Function to set active link styling
+    function setActiveLink(activeLink) {
+      const links = ['postedJobsLink', 'postJobLink'];
+      links.forEach(linkId => {
+        const link = document.getElementById(linkId);
+        if (linkId === activeLink) {
+          link.classList.remove('text-gray-600', 'hover:text-gray-900', 'hover:bg-gray-50');
+          link.classList.add('text-blue-600', 'bg-gray-100');
+          link.querySelector('svg').classList.remove('text-gray-400', 'group-hover:text-gray-500');
+          link.querySelector('svg').classList.add('text-blue-600');
+        } else {
+          link.classList.remove('text-blue-600', 'bg-gray-100');
+          link.classList.add('text-gray-600', 'hover:text-gray-900', 'hover:bg-gray-50');
+          link.querySelector('svg').classList.remove('text-blue-600');
+          link.querySelector('svg').classList.add('text-gray-400', 'group-hover:text-gray-500');
+        }
+      });
+    }
+
+    // Initial load: Fetch employer details and posted jobs by default
+    setActiveLink('postedJobsLink');
+    fetchEmployerDetails();
+    fetchEmployerJobs();
+
+    // Logout functionality
+    document.getElementById('logoutButton').addEventListener('click', () => {
+      localStorage.removeItem('token');
+      window.location.href = './employer-login.html';
+    });
+
+    document.getElementById('profileDropdown').addEventListener('click', () => {
+      document.getElementById('dropdownMenu').classList.toggle('hidden');
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Employer Signup</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50">
+  <!-- Header -->
+  <header class="bg-white shadow-sm p-4 flex justify-between items-center">
+    <div class="flex items-center">
+      <a href="./index.html">
+        <img src="../public/img/cuvette.svg" alt="Cuvette Logo" class="h-8">
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <div class="flex items-center justify-center min-h-screen">
+    <div class="bg-white p-8 rounded-xl shadow-sm w-full max-w-sm">
+      <h2 class="text-xl font-semibold text-gray-800 mb-6 text-center">Employer Signup</h2>
+
+      <!-- Signup Form -->
+      <form id="employerSignupForm">
+        <!-- Name -->
+        <div class="mb-4">
+          <label class="block text-gray-600 text-sm mb-1" for="name">Name</label>
+          <input class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" id="name" name="name" type="text" placeholder="Your name" required>
+        </div>
+
+        <!-- Email -->
+        <div class="mb-4">
+          <label class="block text-gray-600 text-sm mb-1" for="email">Email</label>
+          <input class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" id="email" name="email" type="email" placeholder="Your email" required>
+        </div>
+
+        <!-- Password -->
+        <div class="mb-4">
+          <label class="block text-gray-600 text-sm mb-1" for="password">Password</label>
+          <input class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" id="password" name="password" type="password" placeholder="Password" required>
+        </div>
+
+        <!-- Company -->
+        <div class="mb-4">
+          <label class="block text-gray-600 text-sm mb-1" for="company">Company</label>
+          <input class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" id="company" name="company" type="text" placeholder="Your company" required>
+        </div>
+
+        <!-- Phone -->
+        <div class="mb-4">
+          <label class="block text-gray-600 text-sm mb-1" for="phone">Phone</label>
+          <input class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" id="phone" name="phone" type="text" placeholder="Your phone number" required>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="mb-6">
+          <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-md transition duration-200" type="submit">
+            Sign Up
+          </button>
+        </div>
+
+        <!-- Login Link -->
+        <div class="text-center text-sm">
+          <p>Already have an account? <a href="./employer-login.html" class="text-blue-600 hover:underline">Log In</a></p>
+        </div>
+
+        <!-- Message Display -->
+        <p id="message" class="text-center text-red-500 text-sm mt-4"></p>
+      </form>
+    </div>
+  </div>
+
+  <!-- JavaScript to Handle Form Submission -->
+  <script>
+    document.getElementById('employerSignupForm').addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const company = document.getElementById('company').value;
+      const phone = document.getElementById('phone').value;
+
+      const employerData = { name, email, password, company, phone };
+
+      try {
+        const response = await fetch('http://localhost:8000/api/employer/signup', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(employerData),
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          document.getElementById('message').textContent = 'Account created successfully!';
+          setTimeout(() => {
+            window.location.href = './employer-login.html'; // Redirect to login page
+          }, 2000);
+        } else {
+          document.getElementById('message').textContent = result.message || 'Something went wrong';
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        document.getElementById('message').textContent = 'Failed to connect to the server';
+      }
+    });
+  </script>
+</body>
+</html>

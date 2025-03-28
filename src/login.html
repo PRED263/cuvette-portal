@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body>
+    <header class="bg-white shadow-sm p-4 flex justify-between items-center">
+        <div class="flex items-center">
+            <a href="./index.html">
+                <img src="../public/img/cuvette.svg" alt="Cuvette Logo" >
+            <!-- <a href="./index.html" class="ml-4 text-blue-600 hover:underline text-sm">Contact</a> -->
+            </a>
+        </div>
+    </header>
+
+    <div class="bg-gray-50 flex items-center justify-center min-h-screen">
+        <div class="bg-white p-8 rounded-xl shadow-sm w-full max-w-sm">
+            <h2 class="text-xl font-semibold text-gray-800 mb-6 text-center">Sign In</h2>
+            
+            <form id="loginForm">
+                <div class="mb-4">
+                    <label class="block text-gray-600 text-sm mb-1" for="email">Email</label>
+                    <input class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" id="email" name="email" type="email" placeholder="Enter your email" required>
+                </div>
+                <div class="mb-6">
+                    <label class="block text-gray-600 text-sm mb-1" for="password">Password</label>
+                    <input class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" id="password" name="password" type="password" placeholder="Enter your password" required>
+                </div>
+                <div class="mb-6">
+                    <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-md transition duration-200" type="submit">
+                        Sign In
+                    </button>
+                </div>
+                <div class="text-center text-sm">
+                    <a href="#" class="text-blue-600 hover:underline">Forgot Password?</a>
+                    <p class="mt-2">New here? <a href="./signup.html" class="text-blue-600 hover:underline">Create an account</a></p>
+                </div>
+            </form>
+            <p id="message" class="text-center text-red-500 mt-4"></p>
+        </div>
+    </div>
+
+    <script type="module">
+        import { apiUrl } from './config.js';
+        
+        document.getElementById('loginForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const loginData = { email, password };
+
+            try {
+                const response = await fetch(`${apiUrl}/api/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(loginData)
+                });
+                const result = await response.json();
+                const message = document.getElementById('message');
+
+                if (response.ok) {
+                    message.classList.remove('text-red-500');
+                    message.classList.add('text-green-500');
+                    message.textContent = 'Login successful! Redirecting...';
+                    localStorage.setItem('token', result.token);
+                    setTimeout(() => window.location.href = './dashboard.html', 2000);
+                } else {
+                    message.textContent = result.message || 'Invalid credentials';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('message').textContent = 'Failed to connect to the server';
+            }
+        });
+    </script>
+</body>
+</html>

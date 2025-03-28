@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload a Job</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50">
+    <header class="bg-white shadow-sm p-4 flex justify-between items-center">
+        <div class="flex items-center">
+            <img src="../public/img/cuvette.svg" alt="Cuvette Logo">
+            <a href="./employer-dashboard.html" class="ml-4 text-blue-600 hover:underline text-sm">Back to Dashboard</a>
+        </div>
+    </header>
+
+    <div class="flex items-center justify-center min-h-screen">
+        <div class="bg-white p-8 rounded-xl shadow-sm w-full max-w-sm">
+            <h2 class="text-xl font-semibold text-gray-800 mb-6 text-center">Upload a Job</h2>
+
+            <form id="jobUploadForm">
+                <div class="mb-4">
+                    <label class="block text-gray-600 text-sm mb-1" for="title">Job Title</label>
+                    <input class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" id="title" name="title" type="text" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-600 text-sm mb-1" for="tech">Tech Stack</label>
+                    <input class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" id="tech" name="tech" type="text" placeholder="Comma-separated (e.g., JavaScript, React)" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-600 text-sm mb-1" for="package">Package</label>
+                    <input class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" id="package" name="package" type="text" required>
+                </div>
+                <div class="mb-4 flex space-x-4">
+                    <div class="w-1/2">
+                        <label class="block text-gray-600 text-sm mb-1" for="location">Location</label>
+                        <input class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" id="location" name="location" type="text" required>
+                    </div>
+                    <div class="w-1/2">
+                        <label class="block text-gray-600 text-sm mb-1" for="startdate">Start Date</label>
+                        <input class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" id="startdate" name="startdate" type="date" required>
+                    </div>
+                </div>
+                <div class="mb-4 flex space-x-4">
+                    <div class="w-1/2">
+                        <label class="block text-gray-600 text-sm mb-1" for="openings">Openings</label>
+                        <input class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" id="openings" name="openings" type="number" min="1" required>
+                    </div>
+                    <div class="w-1/2">
+                        <label class="block text-gray-600 text-sm mb-1" for="experience">Experience</label>
+                        <input class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" id="experience" name="experience" type="text" required>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-600 text-sm mb-1" for="type">Job Type</label>
+                    <select class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" id="type" name="type" required>
+                        <option value="Full-time">Full-Time</option>
+                        <option value="Part-time">Part-Time</option>
+                        <option value="Internship">Internship</option>
+                        <option value="Contract">Contract</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-600 text-sm mb-1" for="officeType">Office Type</label>
+                    <select class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" id="officeType" name="officeType" required>
+                        <option value="Remote">Remote</option>
+                        <option value="In-Office">In-Office</option>
+                        <option value="Hybrid">Hybrid</option>
+                    </select>
+                </div>
+                <div class="mb-6">
+                    <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-md transition duration-200" type="submit">
+                        Post Job
+                    </button>
+                </div>
+                <p id="message" class="text-center text-red-500 text-sm mt-4"></p>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.href = './login.html';
+        }
+
+        document.getElementById('jobUploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = {
+                title: document.getElementById('title').value,
+                tech: document.getElementById('tech').value.split(',').map(t => t.trim()),
+                package: document.getElementById('package').value,
+                location: document.getElementById('location').value,
+                startdate: document.getElementById('startdate').value,
+                openings: document.getElementById('openings').value,
+                experience: document.getElementById('experience').value,
+                type: document.getElementById('type').value,
+                officeType: document.getElementById('officeType').value
+            };
+
+            try {
+                const response = await fetch('http://localhost:8000/jobs/createjob', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(formData)
+                });
+                const data = await response.json();
+                const message = document.getElementById('message');
+                if (response.ok) {
+                    message.classList.remove('text-red-500');
+                    message.classList.add('text-green-500');
+                    message.textContent = 'Job posted successfully!';
+                    setTimeout(() => window.location.href = './employer-dashboard.html', 2000);
+                } else {
+                    message.textContent = data.message || 'Error posting job';
+                }
+            } catch (error) {
+                document.getElementById('message').textContent = 'Failed to connect to server';
+            }
+        });
+    </script>
+</body>
+</html>
