@@ -2,6 +2,10 @@
 
 A full-stack job portal application built with Node.js, Express, SQLite, and vanilla JavaScript.
 
+## Live Demo
+
+Visit the live application at: [https://cuvette-portal.onrender.com](https://cuvette-portal.onrender.com)
+
 ## Features
 
 - User Authentication (Sign up/Login)
