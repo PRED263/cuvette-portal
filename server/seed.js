@@ -3,10 +3,6 @@ const { sequelize } = require('./db/connection');
 
 const seedDatabase = async () => {
     try {
-        // Force sync to recreate tables
-        await sequelize.sync({ force: true });
-        console.log('Database tables recreated');
-
         // Create sample users
         const users = await Promise.all([
             User.create({
