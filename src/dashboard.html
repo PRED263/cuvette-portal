@@ -4,20 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cuvette - Job Search</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="font-sans">
-    <header class="bg-white shadow-sm p-4 flex justify-between items-center">
-        <div class="flex items-center">
-            <a href="./index.html">
-                <img src="../public/img/cuvette.svg" alt="Cuvette Logo" >
-            </a>
+    <nav class="bg-white shadow-md border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="./index.html" class="flex-shrink-0">
+                        <img src="../public/img/cuvette.svg" alt="Cuvette">
+                    </a>
+                </div>
+                <div class="flex items-center">
+                    <div class="ml-4 flex items-center">
+                        <div class="relative">
+                            <button id="profileDropdown" class="flex items-center border border-gray-300 rounded-lg py-1 px-3">
+                                <span id="userName" class="ml-2 text-sm font-medium text-gray-700"></span>
+                                <svg class="ml-2 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                            <div id="dropdownMenu" class="hidden absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg">
+                                <button id="logoutButton" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="flex items-center space-x-4">
-            <span id="userName" class="text-gray-700"></span>
-            <button id="logoutBtn" class="text-red-600 hover:text-red-700">Logout</button>
-        </div>
-    </header>
+    </nav>
 
     <div class="flex">
         <aside class="w-64 bg-white border-r border-gray-200 h-screen">
@@ -116,9 +131,7 @@
         </main>
     </div>
 
-    <script type="module">
-        import { apiUrl } from './config.js';
-        
+    <script>
         const jobListings = document.getElementById('jobListings');
         const pageTitle = document.getElementById('pageTitle');
         const fulltimeJobsLink = document.getElementById('fulltimeJobsLink');
@@ -149,7 +162,7 @@
         if (!token) {
             window.location.href = './login.html';
         } else {
-            fetch(`${apiUrl}/api/user`, {
+            fetch('http://localhost:8000/api/user', {
                 headers: { 'Authorization': `Bearer ${token}` }
             })
             .then(res => res.json())
@@ -184,7 +197,7 @@
                     return;
                 }
 
-                const response = await fetch(`${apiUrl}/jobs/apply`, {
+                const response = await fetch(`http://localhost:8000/jobs/apply`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -305,7 +318,7 @@
                 }
                 
                 const queryParams = new URLSearchParams(queryParamsObj).toString();
-                const response = await fetch(`${apiUrl}/jobs/?${queryParams}`, {
+                const response = await fetch(`http://localhost:8000/jobs/?${queryParams}`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const data = await response.json();
@@ -325,7 +338,7 @@
                 }
 
                 currentCategory = 'Applied';
-                const response = await fetch(`${apiUrl}/jobs/applied`, {
+                const response = await fetch('http://localhost:8000/jobs/applied', {
                     headers: { 
                         'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json'
