@@ -1,64 +1,94 @@
-# Cuvette Job Portal
+# Job Search Website (Inspired by Cuvette)
 
-A job portal application where employers can post jobs and students can apply for them.
+## 📌 Project Overview
 
-## Deployment Instructions
+This is a job-searching platform similar to **Cuvette**, designed as part of the **Liftoff Club** project. The platform connects job seekers with employers, offering a seamless experience to apply for jobs and internships. It features advanced job filtering and sorting mechanisms to help users find the best opportunities.
 
-### Frontend Deployment (Netlify)
+## 🌟 Features
 
-1. Create a new repository on GitHub and push your code
-2. Go to [Netlify](https://www.netlify.com/) and sign up/login
-3. Click "New site from Git"
-4. Choose GitHub and select your repository
-5. Configure the build settings:
-   - Build command: (leave empty)
-   - Publish directory: `src`
-6. Click "Deploy site"
+### For Job Seekers
 
-### Backend Deployment (Render)
+- **User Authentication**: Secure sign-up and login system (Email/Password & OAuth).
+- **Profile Management**: Create and manage professional profiles with skills, experience, and resume upload.
+- **Job Search & Filters**:
+  - Search by title, company, or keywords
+  - Filter by location (remote/on-site/hybrid)
+  - Sort by salary range, job type (internship/full-time), and application deadline
+  - Skill-based job recommendations
+- **Application Tracking**: View applied jobs, track status (applied, shortlisted, rejected).
+- **Notifications**: Real-time job alerts and application status updates.
 
-1. Create a new repository on GitHub and push your code
-2. Go to [Render](https://render.com/) and sign up/login
-3. Click "New +" and select "Web Service"
-4. Connect your GitHub repository
-5. Configure the service:
-   - Name: cuvette-backend
-   - Environment: Node
-   - Build Command: `cd server && npm install`
-   - Start Command: `cd server && npm start`
-6. Click "Create Web Service"
+### For Employers
 
-### Environment Variables
+- **Company Dashboard**: Manage job postings and view candidate applications.
+- **Job Posting**: Create job listings with custom requirements.
+- **Candidate Management**: Filter, shortlist, and contact applicants.
 
-Make sure to set these environment variables in your Render dashboard:
+### Admin Panel
 
-- `NODE_ENV`: production
-- `PORT`: 8000
+- Manage users, job listings, and site analytics.
 
-### Post-Deployment Steps
+## 📊 Sorting & Filtering System
 
-1. After deploying the backend, get your Render URL
-2. Update the `apiUrl` in `src/config.js` with your Render URL
-3. Redeploy the frontend on Netlify
+1. **Sort By:**
+   - Relevance (Based on skills and job description match)
+   - Date (Newest listings first)
+   - Salary (Highest to lowest)
+   - Application Deadline (Closest first)
+2. **Filters:**
+   - Job Type (Full-time, Internship, Contract)
+   - Location (Remote, On-site, Hybrid)
+   - Experience Level (Fresher, Mid-level, Senior)
+   - Salary Range
 
-## Local Development
+## 🛠️ Tech Stack
 
-1. Clone the repository
-2. Install dependencies:
+- **Frontend:** React.js (with Tailwind CSS for styling)
+- **Backend:** Node.js (Express.js)
+- **Database:** MongoDB (or PostgreSQL)
+- **Authentication:** JWT (JSON Web Tokens) & OAuth (Google Sign-In)
+- **Deployment:** Vercel (Frontend) & Render (Backend)
+
+## 🚀 Installation & Setup
+
+1. Clone the repository:
+
    ```bash
-   cd server
+   git clone https://github.com/your-username/job-search-platform.git
+   cd job-search-platform
+   ```
+
+2. Install dependencies:
+
+   ```bash
    npm install
    ```
-3. Start the server:
+
+3. Set up environment variables (e.g., `.env` file):
+
+   ```env
+   MONGO_URI=your_mongo_connection_string
+   JWT_SECRET=your_jwt_secret
+   GOOGLE_CLIENT_ID=your_google_client_id
+   GOOGLE_CLIENT_SECRET=your_google_client_secret
+   ```
+
+4. Run the development server:
+
    ```bash
    npm run dev
    ```
-4. Open `src/index.html` in your browser
 
-## Features
+## 📄 Future Enhancements
 
-- User authentication (Student/Employer)
-- Job posting and management
-- Job application system
-- Job filtering and search
-- Application tracking
+- Resume Parsing for automated job recommendations
+- AI-based candidate-job matching
+- Employer analytics dashboard
+
+## 📬 Contributing
+
+Contributions are welcome! Fork the repository and submit a pull request to propose changes.
+
+## 📜 License
+
+This project is licensed under the MIT License.
