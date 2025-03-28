@@ -131,7 +131,9 @@
         </main>
     </div>
 
-    <script>
+    <script type="module">
+        import { apiUrl } from './config.js';
+        
         const jobListings = document.getElementById('jobListings');
         const pageTitle = document.getElementById('pageTitle');
         const fulltimeJobsLink = document.getElementById('fulltimeJobsLink');
@@ -162,7 +164,7 @@
         if (!token) {
             window.location.href = './login.html';
         } else {
-            fetch('http://localhost:8000/api/user', {
+            fetch(`${apiUrl}/api/user`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             })
             .then(res => res.json())
@@ -197,7 +199,7 @@
                     return;
                 }
 
-                const response = await fetch(`http://localhost:8000/jobs/apply`, {
+                const response = await fetch(`${apiUrl}/jobs/apply`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -318,7 +320,7 @@
                 }
                 
                 const queryParams = new URLSearchParams(queryParamsObj).toString();
-                const response = await fetch(`http://localhost:8000/jobs/?${queryParams}`, {
+                const response = await fetch(`${apiUrl}/jobs/?${queryParams}`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const data = await response.json();
@@ -338,7 +340,7 @@
                 }
 
                 currentCategory = 'Applied';
-                const response = await fetch('http://localhost:8000/jobs/applied', {
+                const response = await fetch(`${apiUrl}/jobs/applied`, {
                     headers: { 
                         'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json'
